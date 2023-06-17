@@ -1,64 +1,3 @@
-// // Server-side code
-
-// import express from 'express';
-// import { nanoid } from 'nanoid';
-// import cors from 'cors';
-// import cookieParser from 'cookie-parser';
-
-// const app = express();
-// app.use(express.json());
-// app.use(cors({
-//   origin: 'http://localhost:3001',
-//   credentials: true,
-// }));
-// app.use(cookieParser());
-
-// const urlMap = new Map();
-
-// app.post('/api/shorten', (req, res) => {
-//   const { url } = req.body;
-//   const id = nanoid(6);
-
-//   // Store the user's identifier on their device (cookie)
-//   res.cookie('userIdentifier', id, { httpOnly: true });
-
-//   // Associate the shortened URL with the user's identifier
-//   const userHistory = urlMap.get(id) || [];
-//   urlMap.set(id, [...userHistory, url]);
-
-//   res.json({ shortUrl: `http://${req.hostname}:${req.socket.localPort}/${id}` });
-// });
-
-// app.get('/api/history', (req, res) => {
-//   const userIdentifier = req.cookies.userIdentifier;
-
-//   const userHistory = urlMap.get(userIdentifier) || [];
-
-//   // Modify the userHistory array to contain objects with shortUrl and originalUrl properties
-//   const formattedHistory = userHistory.map(url => ({ shortUrl: url, originalUrl: url }));
-
-//   res.json({ history: formattedHistory });
-// });
-
-
-// app.get('/:id', (req, res) => {
-//   const { id } = req.params;
-//   const url = urlMap.get(id);
-
-//   if (url) {
-//     res.redirect(301, url);
-//   } else {
-//     res.status(404).json({ error: 'Invalid URL' });
-//   }
-// });
-
-// const PORT = 4001;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
-
-
-// Server-side code
 import express from 'express';
 import { nanoid } from 'nanoid';
 import cors from 'cors';
@@ -71,9 +10,11 @@ app.use(cors({
   origin: 'http://localhost:3001',
   credentials: true,
 }));
+
 app.use(cookieParser());
 
 const historyFile = 'history.json';
+const analyticsFile = 'analytics.json';
 
 // Load the history from the file or initialize an empty array
 let urlHistory = [];
@@ -84,6 +25,15 @@ try {
   console.error('Error loading history:', err);
 }
 
+// Load the analytics from the file or initialize an empty object
+let urlAnalytics = {};
+try {
+  const data = fs.readFileSync(analyticsFile, 'utf8');
+  urlAnalytics = JSON.parse(data);
+} catch (err) {
+  console.error('Error loading analytics:', err);
+}
+
 app.post('/api/shorten', (req, res) => {
   const { url } = req.body;
   const id = nanoid(6);
@@ -91,11 +41,17 @@ app.post('/api/shorten', (req, res) => {
 
   // Associate the shortened URL with the user's identifier
   urlHistory.push({ id, userIdentifier, shortUrl: `http://${req.hostname}:${req.socket.localPort}/${id}`, originalUrl: url });
+  urlAnalytics[id] = { clicks: 0, sources: {} };
 
-  // Save the updated history to the file
+  // Save the updated history and analytics to the file
   fs.writeFile(historyFile, JSON.stringify(urlHistory), 'utf8', (err) => {
     if (err) {
       console.error('Error saving history:', err);
+    }
+  });
+  fs.writeFile(analyticsFile, JSON.stringify(urlAnalytics), 'utf8', (err) => {
+    if (err) {
+      console.error('Error saving analytics:', err);
     }
   });
 
@@ -111,6 +67,23 @@ app.get('/api/history', (req, res) => {
   res.json({ history: userHistory });
 });
 
+app.get('/api/analytics/:id', (req, res) => {
+  const { id } = req.params;
+
+  // Find the analytics data for the specified URL ID
+  const analytics = urlAnalytics[id];
+
+  if (analytics) {
+    res.json({ analytics });
+  } else {
+    // If the analytics data is not found, return an empty object
+    res.json({ analytics: {} });
+  }
+});
+
+
+// ...
+
 app.get('/:id', (req, res) => {
   const { id } = req.params;
 
@@ -118,11 +91,77 @@ app.get('/:id', (req, res) => {
   const urlData = urlHistory.find(item => item.id === id);
 
   if (urlData) {
+    const analytics = urlAnalytics[id];
+    analytics.clicks++;
+
+    // Store the source of the click event
+    const source = req.headers.referer || 'Direct';
+    if (analytics.sources[source]) {
+      analytics.sources[source]++;
+    } else {
+      analytics.sources[source] = 1;
+    }
+
+    // Save the updated analytics to the file
+    fs.writeFile(analyticsFile, JSON.stringify(urlAnalytics), 'utf8', (err) => {
+      if (err) {
+        console.error('Error saving analytics:', err);
+      }
+    });
+
     res.redirect(301, urlData.originalUrl);
   } else {
     res.status(404).json({ error: 'Invalid URL' });
   }
 });
+
+// ...
+
+
+app.get('/:shortUrl', (req, res) => {
+  const shortUrl = req.params.shortUrl;
+
+  // Find the URL data in the history array
+  const urlData = urlHistory.find(item => item.id === shortUrl);
+
+  if (urlData) {
+    const originalUrl = urlData.originalUrl;
+    const analytics = urlAnalytics[shortUrl];
+
+    // Increment the click count for the shortUrl in the analytics data
+    if (analytics) {
+      analytics.clicks++;
+    } else {
+      urlAnalytics[shortUrl] = {
+        clicks: 1,
+        sources: {}
+      };
+    }
+
+    // Store the source of the click event
+    const source = req.headers.referer || 'Direct';
+    if (analytics && analytics.sources[source]) {
+      analytics.sources[source]++;
+    } else {
+      if (analytics) {
+        analytics.sources[source] = 1;
+      }
+    }
+
+    // Save the updated analytics data
+    fs.writeFile(analyticsFile, JSON.stringify(urlAnalytics), 'utf8', (err) => {
+      if (err) {
+        console.error('Error saving analytics:', err);
+      }
+    });
+
+    res.redirect(301, originalUrl);
+  } else {
+    res.status(404).json({ error: 'Invalid URL' });
+  }
+});
+
+
 
 const PORT = 4001;
 app.listen(PORT, () => {

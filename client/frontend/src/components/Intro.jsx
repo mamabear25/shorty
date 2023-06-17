@@ -8,20 +8,20 @@ function Intro() {
             <div className='mt-4 md:flex gap-4 font-medium'>
                 <div className='bg-gray-800 text-gray-100 p-8 rounded mb-4'>
                     <p>
-                        With our ShortURL service, you can easily shorten long links from Instagram, Facebook, YouTube, Twitter, LinkedIn, 
+                        <span className='text-orange-300'>URL Shortening: </span> shorten long links from Instagram, Facebook, YouTube, Twitter, LinkedIn, 
                         WhatsApp, TikTok, blogs, and websites. Say goodbye to lengthy URLs and enjoy a more concise and shareable link.
                     </p>
                 </div>
-                <div className='bg-gray-500 text-gray-100 p-4 rounded mb-4 hidden md:block'>
+                <div className='bg-gray-500 text-gray-100 p-8 rounded mb-4 hidden md:block'>
                     <p>
-                        Using our user-friendly interface, simply paste the long URL into the provided field and click the "Shorten" button. In an instant, you'll 
-                        receive a shortened URL that you can easily copy and share across various platforms, including websites, chat applications, and emails.
+                        <span className='text-orange-400'>Custom URLs: </span>
+                        Scissor also allows users to customize their shortened URLs. Users can choose their own custom domain name and customize the URL to reflect their brand or content. This feature is particularly useful for individuals or small businesses who want to create branded links for their 
                     </p>
                 </div>
-                <div className='bg-gray-200 text-gray-900 p-4 rounded'>
+                <div className='bg-gray-200 text-gray-900 p-10 rounded'>
                     <p>
-                        You can use the shortened links anywhere, our shortened URLs are versatile and
-                        adaptable. Experience the convenience of our ShortURL service today and simplify your link sharing process.
+                        <span className='text-orange-600'>QR Code Generation: </span>
+                        Scissor allows you to generate QR codes for the shortened URLs. Simply download the QR code image and use it in your promotional materials or/and on their website.
                     </p>
                 </div>
             </div>
