@@ -37,8 +37,8 @@ if (!analyticsData) {
 
   return (
     <div>
-      <h2>Analytics for URL: {urlId}</h2>
-      <p>Clicks: {analyticsData.clicks}</p>
+      {/* <h2>Analytics for URL: {urlId}</h2> */}
+      <p className='text-orange-500'>Clicks: {analyticsData.clicks}</p>
       <h3>Sources:</h3>
       <ul>
         {Object.entries(analyticsData.sources).map(([source, count]) => (

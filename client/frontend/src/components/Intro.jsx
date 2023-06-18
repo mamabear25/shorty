@@ -21,7 +21,7 @@ function Intro() {
                 <div className='bg-gray-200 text-gray-900 p-10 rounded'>
                     <p>
                         <span className='text-orange-600'>QR Code Generation: </span>
-                        Scissor allows you to generate QR codes for the shortened URLs. Simply download the QR code image and use it in your promotional materials or/and on their website.
+                        Scissor allows you to generate QR codes for the shortened URLs. Simply download the QR code image and use it in your promotional materials and website.
                     </p>
                 </div>
             </div>
