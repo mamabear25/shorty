@@ -1,7 +1,6 @@
 import React from 'react';
 import Scissor from '../assets/sci.png'
 
-
 function Header() {
   return (
     <header className="bg-gray-300 text-white pl-[80px] py-2 flex justify-between items-center">
