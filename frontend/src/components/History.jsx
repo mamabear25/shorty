@@ -61,35 +61,35 @@ const UserHistory = ({ history }) => {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {history.map((item, index) => (
-                    <tr key={index}>
-                      <td className="px-6 py-4 whitespace-nowrap">{item.shortUrl}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{item.originalUrl.slice(0, 50)}...</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <ShowAnalytics urlId={item.id} />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {selectedItem === item.shortUrl && qrCode ? (
-                          <>
-                            <button className="ml-2 text-green-500 hover:underline" onClick={downloadQRCode}>
-                              Download QR Code
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              className="text-brand hover:underline"
-                              onClick={() => generateQRCode(item.shortUrl)}
-                            >
-                              Generate QR Code
-                            </button>
-                          </>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {history.map((item, index) => (
+                      <tr key={index}>
+                        <td className="px-6 py-4 whitespace-nowrap">{item.shortUrl}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{item.originalUrl ? item.originalUrl.slice(0, 50) + '...' : ''}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <ShowAnalytics urlId={item.id} />
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {selectedItem === item.shortUrl && qrCode ? (
+                            <>
+                              <button className="ml-2 text-green-500 hover:underline" onClick={downloadQRCode}>
+                                Download QR Code
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                className="text-brand hover:underline"
+                                onClick={() => generateQRCode(item.shortUrl)}
+                              >
+                                Generate QR Code
+                              </button>
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
               </table>
             ) : (
               <p className="text-gray-500">You haven't shortened any links yet</p>
