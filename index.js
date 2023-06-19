@@ -228,11 +228,11 @@ import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import fs from 'fs';
 import qrcode from 'qrcode';
-import API_URL from "./utils.js";
 
 const app = express();
 
 app.use(express.json());
+const API_URL = 'https://scissorbackend.onrender.com';
 
 app.use(cors({
   origin: API_URL,
