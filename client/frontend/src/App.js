@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import UserHistory from './components/History';
 import Header from './components/Header';
 import Intro from './components/Intro';
-import ShowAnalytics from './components/Analytics';
+// import ShowAnalytics from './components/Analytics';
 import QRCode from 'qrcode.react';
 
 function App() {
@@ -57,34 +57,41 @@ function App() {
       setError('Invalid URL');
       return;
     }
-
+  
     setError(null); // Clear any previous error
   
-    const response = await fetch('http://localhost:4001/api/shorten', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ url, customAlias: customAliasInput }), // Include the custom alias in the request body
-      credentials: 'include', // Include credentials in the request
-    });
+    try {
+      const response = await fetch('http://localhost:4001/api/shorten', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url, customAlias: customAliasInput }), // Include the custom alias in the request body
+        credentials: 'include', // Include credentials in the request
+      });
   
-    if (response.ok) {
-      const data = await response.json();
-      setShortUrl(data.shortUrl);
-      setIsQRCodeGenerated(false);
-      await fetchUserHistory();
+      if (response.ok) {
+        const data = await response.json();
+        setShortUrl(data.shortUrl);
+        setIsQRCodeGenerated(false);
+        await fetchUserHistory();
   
-      // Extract the URL ID from the short URL
-      const regex = /http:\/\/[^/]+\/(.+)/;
-      const match = data.shortUrl.match(regex);
-      if (match) {
-        setUrlId(match[1]);
+        // Extract the URL ID from the short URL
+        const regex = /http:\/\/[^/]+\/(.+)/;
+        const match = data.shortUrl.match(regex);
+        if (match) {
+          setUrlId(match[1]);
+        }
+      } else if (response.status === 429) {
+        setError('Too many trials, try again in 15 minutes');
+      } else {
+        setError('Failed to create a shortened URL. Please try again.'); // Set error message for other API request failures
       }
-    } else {
-      setError('Failed to create a shortened URL. Please try again.'); // Set error message for API request failure
+    } catch (error) {
+      setError('Failed to create a shortened URL. Please try again.'); // Set error message for network errors
     }
   };
+  
   
   // Function to validate URL format
   const isValidURL = (url) => {
@@ -109,7 +116,6 @@ function App() {
     link.download = fileName;
     link.click();
   };
-  
 
   useEffect(() => {
     setCookies('userIdentifier', userHistory, { path: '/' });
@@ -122,24 +128,25 @@ function App() {
         <Intro />
         <div className="flex flex-col justify-center items-center mt-8">
           <div className="mb-10">
-            <div className="mb-2 md:text-lg">
+            <div className="mb-2">
               <p className="font-bold">Paste the URL to be shortened</p>
             </div>
             <input
-              className="h-10 md:w-[300px] border-2 border-gray-500 rounded-lg pl-4"
+              className="h-10 md:w-[300px] border border-gray-500 rounded-lg pl-4 mr-4"
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
+              placeholder="Url" 
             />
             <input
-              className="h-10 md:w-[300px] border-2 border-gray-500 rounded-lg pl-4"
+              className="h-10 md:w-[200px] border border-gray-500 pl-4 rounded-l-lg text-sm"
               type="text"
               value={customAliasInput}
               onChange={(e) => setCustomAliasInput(e.target.value)}
-              placeholder="Custom Alias" // Add a placeholder for the input field
+              placeholder="Custom Domain (Optional)" // Add a placeholder for the input field
             />
             <button
-              className="font-bold bg-orange-600 text-gray-50 px-4 py-2 rounded-lg hover:bg-blue-200"
+              className="font-bold bg-orange-600 text-gray-50 px-4 py-2 rounded-r hover:bg-blue-200"
               onClick={handleShorten}
             >
               Shorten
@@ -171,7 +178,7 @@ function App() {
                 <div className="mt-4">
                   {!isQRCodeGenerated ? (
                     <button
-                      className="font-bold bg-blue-600 text-gray-50 px-4 py-2 rounded-lg hover:bg-blue-200"
+                      className="font-bold bg-orange-600 text-gray-50 px-4 py-2 rounded-lg hover:bg-orange-700"
                       onClick={generateQRCode}
                     >
                       Generate QR Code
@@ -181,10 +188,10 @@ function App() {
                       <QRCode value={shortUrl} size={128} />
                       <div>
                         <button
-                          className="font-bold bg-green-600 text-gray-50 px-4 py-2 rounded-lg hover:bg-blue-200"
+                          className="font-bold bg-orange-600 mt-3 text-gray-50 px-6 py-1 rounded-lg hover:bg-orange-700 whitespace-nowrap"
                           onClick={downloadQRCode}
                         >
-                          Download QR Code
+                          Download
                         </button>
                       </div>
                     </>
@@ -195,10 +202,11 @@ function App() {
           </div>
         </div>
         <UserHistory history={userHistory} />
-        {urlId && <ShowAnalytics urlId={urlId} />}
+        {/* {urlId && <ShowAnalytics urlId={urlId} />} */}
       </div>
     </div>
   );
 }
 
 export default App;
+
