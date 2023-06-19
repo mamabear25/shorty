@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import UserHistory from './components/History';
 import Header from './components/Header';
 import Intro from './components/Intro';
-import API_URL from "./config";
+import API_URL from "./components/config";
 // import ShowAnalytics from './components/Analytics';
 import QRCode from 'qrcode.react';
 
