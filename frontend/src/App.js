@@ -85,8 +85,10 @@ function App() {
         }
       } else if (response.status === 429) {
         setError('Too many trials, try again in 15 minutes');
+      } else if (response.status === 409) {
+        setError('Custom domain already taken. Please choose a different one.'); // Set error message for other API request failures
       } else {
-        setError('Failed to create a shortened URL. Please try again.'); // Set error message for other API request failures
+        setError('Failed to create a shortened URL. Please try again.');
       }
     } catch (error) {
       setError('Failed to create a shortened URL. Please try again.'); // Set error message for network errors
