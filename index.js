@@ -14,17 +14,17 @@ const app = express();
 //   credentials: true,
 // }));
 
-app.use(express.json());
 app.use(cors({
-  origin: 'https://scissorfrontend.onrender.com/',
+  origin: 'https://scissorfrontend.onrender.com',
   credentials: true,
 }));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com/');
+  res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com');
   next();
 });
 
+app.use(express.json());
 app.use(cookieParser());
 
 const limiter = rateLimit({
