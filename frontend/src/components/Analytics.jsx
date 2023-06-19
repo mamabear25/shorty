@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_URL from "./config";
 
 function ShowAnalytics({ urlId }) {
   const [analyticsData, setAnalyticsData] = useState(null);
@@ -9,7 +10,7 @@ function ShowAnalytics({ urlId }) {
 useEffect(() => {
   const fetchAnalytics = async () => {
     try {
-      const response = await fetch(`http://localhost:4001/api/analytics/${urlId}`);
+      const response = await fetch(`${API_URL}/api/analytics/${urlId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch analytics');
       }

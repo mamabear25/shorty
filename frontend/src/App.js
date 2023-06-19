@@ -3,6 +3,7 @@ import { useCookies } from 'react-cookie';
 import UserHistory from './components/History';
 import Header from './components/Header';
 import Intro from './components/Intro';
+import API_URL from "./config";
 // import ShowAnalytics from './components/Analytics';
 import QRCode from 'qrcode.react';
 
@@ -31,7 +32,7 @@ function App() {
 
   const fetchUserHistory = async () => {
     try {
-      const response = await fetch('http://localhost:4001/api/history', {
+      const response = await fetch(`${API_URL}/api/history`, {
         credentials: 'include', // Include credentials in the request
       });
 
@@ -61,7 +62,7 @@ function App() {
     setError(null); // Clear any previous error
   
     try {
-      const response = await fetch('http://localhost:4001/api/shorten', {
+      const response = await fetch(`${API_URL}/api/shorten`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
