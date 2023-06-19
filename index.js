@@ -165,7 +165,7 @@ app.get('/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl;
 
   // Find the URL data in the history array
-  const urlData = urlHistory.find(item => item.id === shortUrl);
+  const urlData = urlHistory.find((item) => item.id === shortUrl);
 
   if (urlData) {
     const originalUrl = urlData.originalUrl;
@@ -177,7 +177,7 @@ app.get('/:shortUrl', (req, res) => {
     } else {
       urlAnalytics[shortUrl] = {
         clicks: 1,
-        sources: {}
+        sources: {},
       };
     }
 
@@ -198,13 +198,15 @@ app.get('/:shortUrl', (req, res) => {
       }
     });
 
-    res.redirect(301, originalUrl);
+    // Determine the protocol to use based on the original URL
+    const protocol = originalUrl.startsWith('https://') ? 'https' : 'http';
+
+    // Redirect to the original URL using the appropriate protocol
+    res.redirect(301, `${protocol}://${originalUrl}`);
   } else {
     res.status(404).json({ error: 'Invalid URL' });
   }
 });
-
-
 
 const PORT = 4001;
 app.listen(PORT, () => {
