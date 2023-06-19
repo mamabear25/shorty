@@ -84,6 +84,10 @@ app.post('/api/shorten', async (req, res) => {
   res.json({ shortUrl: `http://${req.hostname}:${req.socket.localPort}/${id}`,  qrCode: `http://${req.hostname}:${req.socket.localPort}/qrcodes/${id}.png` });;
 });
 
+app.get('/', (req, res) => {
+  res.status(200).send("Here's the homepage");
+});
+
 
 app.get('/api/history', (req, res) => {
   const userIdentifier = req.cookies.userIdentifier;
