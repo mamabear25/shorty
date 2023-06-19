@@ -20,6 +20,11 @@ app.use(cors({
   credentials: true,
 }));
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com/');
+  next();
+});
+
 app.use(cookieParser());
 
 const limiter = rateLimit({
