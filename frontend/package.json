@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "dns": "^0.2.2",
     "dom-to-image": "^2.6.0",
     "file-saver": "^2.0.5",
     "html-webpack-plugin": "^5.5.3",
