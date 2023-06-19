@@ -10,15 +10,15 @@
 
 // app.use(express.json());
 
-// // app.use(cors({
-// //   origin: 'https://scissorfrontend.onrender.com',
-// //   credentials: true,
-// // }));
+// app.use(cors({
+//   origin: 'https://scissorfrontend.onrender.com',
+//   credentials: true,
+// }));
 
-// // app.use((req, res, next) => {
-// //   res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com');
-// //   next();
-// // });
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com');
+//   next();
+// });
 
 // app.use(cors({
 //   origin: 'http://localhost:3001',
@@ -232,15 +232,14 @@ import qrcode from 'qrcode';
 const app = express();
 
 app.use(express.json());
-const API_URL = 'https://scissorbackend.onrender.com';
 
 app.use(cors({
-  origin: API_URL,
+  origin: 'https://scissorfrontend.onrender.com',
   credentials: true,
 }));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', API_URL);
+  res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com');
   next();
 });
 
