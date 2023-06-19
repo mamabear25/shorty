@@ -7,9 +7,16 @@ import fs from 'fs';
 import qrcode from 'qrcode';
 
 const app = express();
+
+// app.use(express.json());
+// app.use(cors({
+//   origin: 'http://localhost:3001',
+//   credentials: true,
+// }));
+
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: 'https://scissorfrontend.onrender.com/',
   credentials: true,
 }));
 
