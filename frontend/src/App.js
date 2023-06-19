@@ -4,7 +4,7 @@ import UserHistory from './components/History';
 import Header from './components/Header';
 import Intro from './components/Intro';
 import API_URL from "./components/config";
-import dns from 'dns';
+// import ShowAnalytics from './components/Analytics';
 import QRCode from 'qrcode.react';
 
 function App() {
@@ -95,24 +95,9 @@ function App() {
   
   
   // Function to validate URL format
-  const isValidURL = async (url) => {
+  const isValidURL = (url) => {
     const urlPattern = /^(https?:\/\/)?([\w.]+)\.([a-z]{2,6}\.?)(\/[\w\u0080-\u00ff@\/#?&-=]+)?$/i;
-    const match = url.match(urlPattern);
-  
-    if (!match) {
-      return false; // Invalid URL format
-    }
-  
-    const host = match[2]; // Extract the host from the URL
-    return new Promise((resolve) => {
-      dns.lookup(host, (err) => {
-        if (err) {
-          resolve(false); // Invalid host
-        } else {
-          resolve(true); // Valid URL
-        }
-      });
-    });
+    return urlPattern.test(url);
   };
   
 
