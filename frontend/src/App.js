@@ -127,7 +127,7 @@ function App() {
       <Header />
       <div>
         <Intro />
-        <div className="flex flex-col justify-center items-center mt-8">
+        <div className="md:flex flex-col justify-center items-center mt-8">
           <div className="mb-10">
             <div className="mb-2">
               <p className="font-bold">Paste absolute URL to be shortened</p>
