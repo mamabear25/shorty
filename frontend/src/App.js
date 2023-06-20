@@ -61,46 +61,6 @@ function App() {
     fetchUserHistory();
   }, []);
 
-  // const handleShorten = async () => {
-  //   // Check if the URL is valid
-  //   if (!isValidURL(url)) {
-  //     setError('Invalid URL');
-  //     return;
-  //   }
-
-  //   setError(''); // Clear any previous error
-  //   setIsLoading(true);
-
-  //   try {
-  //     const response = await fetch(`${API_URL}/api/shorten`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ url, customAlias: customAliasInput }), // Include the custom alias in the request body
-  //     });
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       setResult(data.shortUrl);
-  //       setUserHistory([...userHistory, data]);
-  //       setUrl('');
-  //       setCustomAliasInput('');
-  //     } else if (response.status === 429) {
-  //       setError('Too many trials, try again in 15 minutes');
-  //     } else if (response.status === 409) {
-  //       setError('Custom domain already taken. Please choose a different one.');
-  //     } else {
-  //       setError('Failed to create a shortened URL. Please try again.');
-  //     }
-  //   } catch (error) {
-  //     setError('Failed to create a shortened URL. Please try again.');
-  //   } finally {
-  //     // Reset loading state
-  //     setIsLoading(false);
-  //   }
-  // };
-
   const handleShorten = async () => {
     // Check if the URL is valid
     if (!isValidURL(url)) {

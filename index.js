@@ -35,10 +35,18 @@ app.use(cookieParser());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 15, // limit each IP to 5 requests per windowMs
+  max: 5, // limit each IP to 5 requests per windowMs
   message: 'Too many requests from this IP, please try again later.',
 });
 
+app.use((req, res, next) => {
+  const userIdentifier = req.cookies.userIdentifier || nanoid(12);
+  res.cookie('userIdentifier', userIdentifier, { maxAge: 900000, httpOnly: true });
+
+  req.userIdentifier = userIdentifier;
+
+  next();
+});
 
 app.use(limiter);
 
