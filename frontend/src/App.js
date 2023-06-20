@@ -214,6 +214,16 @@
 
 // export default App;
 
+
+
+
+
+
+
+
+
+// NUMBER 2 SEcond Best
+
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import UserHistory from './components/History';
@@ -267,6 +277,16 @@ function App() {
     fetchUserHistory();
   }, []);
 
+  // Function to validate URL format
+  const isValidURL = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
   const handleShorten = async () => {
     // Check if the URL is valid
     if (!isValidURL(url)) {
@@ -304,16 +324,6 @@ function App() {
     } finally {
       // Reset loading state
       setIsLoading(false);
-    }
-  };
-
-  // Function to validate URL format
-  const isValidURL = (url) => {
-    try {
-      new URL(url);
-      return true;
-    } catch (error) {
-      return false;
     }
   };
   
@@ -366,7 +376,7 @@ function App() {
             <button
               className="font-bold bg-orange-600 text-gray-50 px-4 py-2 rounded-r hover:bg-blue-200 mb-2"
               onClick={handleShorten}
-              disabled={isLoading}
+              disabled={!isValidURL(url) || isLoading} // Disable when the URL is invalid or loading
               >
               {isLoading ? (
                 <div className="flex items-center">
