@@ -10,13 +10,23 @@ const app = express();
 
 app.use(express.json());
 
+// app.use(cors({
+//   origin: 'https://scissorfrontend.onrender.com',
+//   credentials: true,
+// }));
+
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com');
+//   next();
+// });
+
 app.use(cors({
-  origin: 'https://scissorfrontend.onrender.com',
+  origin: 'http://localhost:3001',
   credentials: true,
 }));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
   next();
 });
 
