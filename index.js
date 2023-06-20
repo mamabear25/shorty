@@ -10,25 +10,25 @@ const app = express();
 
 app.use(express.json());
 
-// app.use(cors({
-//   origin: 'https://scissorfrontend.onrender.com',
-//   credentials: true,
-// }));
-
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com');
-//   next();
-// });
-
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: 'https://scissorfrontend.onrender.com',
   credentials: true,
 }));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
+  res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com');
   next();
 });
+
+// app.use(cors({
+//   origin: 'http://localhost:3001',
+//   credentials: true,
+// }));
+
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
+//   next();
+// });
 
 app.use(express.json());
 app.use(cookieParser());
@@ -130,7 +130,7 @@ app.get('/api/analytics/:id', (req, res) => {
   }
 });
 
-// ...
+// Redirect the short URL to the original URL
 
 app.get('/:id', (req, res) => {
   const { id } = req.params;
