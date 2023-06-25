@@ -132,7 +132,7 @@ function App() {
         <div className="md:flex flex-col justify-center items-center mt-8">
           <div className="mb-10 md:p-0 p-10">
             <div className="mb-2">
-              <p className="font-bold">Paste absolute URL to be shortened</p>
+              <p className="font-bold">Paste URL to be shortened</p>
             </div>
             <div className="flex flex-wrap items-center">
               <input

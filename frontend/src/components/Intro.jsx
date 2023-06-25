@@ -12,16 +12,16 @@ function Intro() {
                         WhatsApp, TikTok, blogs, and websites. Say goodbye to lengthy URLs and enjoy a more concise and shareable link.
                     </p>
                 </div>
-                <div className='bg-gray-500 text-gray-100 p-8 rounded mb-4 hidden md:block'>
+                <div className='bg-gray-500 text-gray-100 p-8 rounded mb-4'>
                     <p>
                         <span className='text-orange-400'>Custom URLs: </span>
-                        Scissor also allows users to customize their shortened URLs. Users can choose their own custom domain name and customize the URL to reflect their brand or content. This feature is particularly useful for individuals or small businesses who want to create branded links for their 
+                        Users can choose their own custom domain name and customize the URL to reflect their brand or content. This feature is particularly useful for individuals or small businesses who want to create branded links. 
                     </p>
                 </div>
-                <div className='bg-gray-200 text-gray-900 p-10 rounded'>
+                <div className='bg-gray-200 text-gray-900 p-6 rounded'>
                     <p>
                         <span className='text-orange-600'>QR Code Generation: </span>
-                        Scissor allows you to generate QR codes for the shortened URLs. Simply download the QR code image and use it in your promotional materials and website.
+                        Scissor allows you to generate QR codes for the shortened URLs. Simply download the QR code image and share it.
                     </p>
                 </div>
             </div>
