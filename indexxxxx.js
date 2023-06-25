@@ -2,43 +2,53 @@ import express from 'express';
 import { nanoid } from 'nanoid';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-// import rateLimit from 'express-rate-limit';
+import rateLimit from 'express-rate-limit';
 import fs from 'fs';
 import qrcode from 'qrcode';
-import path from 'path';
 
 const app = express();
 
-app.use(cors({
-  origin: 'https://scissorfrontend.onrender.com',
-  credentials: true,
-}));
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com');
-  next();
-});
+app.use(express.json());
 
 // app.use(cors({
-//   origin: 'http://localhost:3001',
+//   origin: 'https://scissorfrontend.onrender.com',
 //   credentials: true,
 // }));
 
 // app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
+//   res.header('Access-Control-Allow-Origin', 'https://scissorfrontend.onrender.com');
 //   next();
 // });
+
+app.use(cors({
+  origin: 'http://localhost:3001',
+  credentials: true,
+}));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
+  next();
+});
 
 app.use(express.json());
 app.use(cookieParser());
 
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 5, // limit each IP to 5 requests per windowMs
-//   message: 'Too many requests from this IP, please try again later.',
-// });
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 5 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
 
-// app.use(limiter);
+app.use((req, res, next) => {
+  const userIdentifier = req.cookies.userIdentifier || nanoid(12);
+  res.cookie('userIdentifier', userIdentifier, { maxAge: 900000, httpOnly: true });
+
+  req.userIdentifier = userIdentifier;
+
+  next();
+});
+
+app.use(limiter);
 
 const historyFile = 'history.json';
 const analyticsFile = 'analytics.json';
@@ -67,9 +77,10 @@ app.post('/api/shorten', async (req, res) => {
   const userIdentifier = req.cookies.userIdentifier;
 
   // Generate QR code for the shortened URL
+  const qrCodePath = `./public/qrcodes/${id}.png`; // Specify the path where QR codes will be stored
 
   try {
-    await qrcode.toFile(qrCodePath, `http://${req.hostname}:${req.socket.localPort}/${id}`); // Generate QR code and save it as a file
+    await qrcode.toFile(qrCodePath, `http://${req.hostname}/${id}`); // Generate QR code and save it as a file
   } catch (error) {
     console.error('Error generating QR code:', error);
   }
@@ -81,7 +92,7 @@ app.post('/api/shorten', async (req, res) => {
   }
 
   // Associate the shortened URL with the user's identifier
-  urlHistory.push({ id, userIdentifier, shortUrl: `http://${req.hostname}:${req.socket.localPort}/${id}`, originalUrl: url });
+  urlHistory.push({ id, userIdentifier, shortUrl: `http://${req.hostname}/${id}`, originalUrl: url });
   urlAnalytics[id] = { clicks: 0, sources: {} };
 
   // Save the updated history and analytics to the file
@@ -96,12 +107,13 @@ app.post('/api/shorten', async (req, res) => {
     }
   });
 
-  res.json({ shortUrl: `http://${req.hostname}:${req.socket.localPort}/${id}`, qrCode: `http://${req.hostname}:${req.socket.localPort}/qrcodes/${id}.png` });
+  res.json({ shortUrl: `http://${req.hostname}/${id}`, qrCode: `http://${req.hostname}/qrcodes/${id}.png` });
 });
 
 app.get('/', (req, res) => {
   res.status(200).send("Here's the homepage");
 });
+
 
 app.get('/api/history', (req, res) => {
   const userIdentifier = req.cookies.userIdentifier;
@@ -125,6 +137,9 @@ app.get('/api/analytics/:id', (req, res) => {
     res.json({ analytics: {} });
   }
 });
+
+
+// Redirect the short URL to the original URL
 
 app.get('/:id', (req, res) => {
   const { id } = req.params;
@@ -156,6 +171,8 @@ app.get('/:id', (req, res) => {
     res.status(404).json({ error: 'Invalid URL' });
   }
 });
+
+// ...
 
 app.get('/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl;
@@ -204,7 +221,6 @@ app.get('/:shortUrl', (req, res) => {
   }
 });
 
-const PORT = 4001;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(process.env.PORT || 4000, () => {
+  console.log(`Server is running on port ${process.env.PORT || 4000}`);
 });
