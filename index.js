@@ -31,6 +31,15 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+  const userIdentifier = req.cookies.userIdentifier || nanoid(12);
+  res.cookie('userIdentifier', userIdentifier, { maxAge: 900000, httpOnly: true });
+
+  req.userIdentifier = userIdentifier;
+
+  next();
+});
+
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000, // 15 minutes
 //   max: 5, // limit each IP to 5 requests per windowMs
