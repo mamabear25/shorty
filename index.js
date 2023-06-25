@@ -66,9 +66,10 @@ app.post('/api/shorten', async (req, res) => {
   const userIdentifier = req.cookies.userIdentifier;
 
   // Generate QR code for the shortened URL
+  const qrCodePath = `./public/qrcodes/${id}.png`; // Specify the path where QR codes will be stored
 
   try {
-    await qrcode.toFile(qrCodePath, `https://scissorfrontend.onrender.com/${id}`); // Generate QR code and save it as a file
+    await qrcode.toFile(qrCodePath, `http://${req.hostname}/${id}`); // Generate QR code and save it as a file
   } catch (error) {
     console.error('Error generating QR code:', error);
   }
@@ -80,7 +81,7 @@ app.post('/api/shorten', async (req, res) => {
   }
 
   // Associate the shortened URL with the user's identifier
-  urlHistory.push({ id, userIdentifier, shortUrl: `https://scissorfrontend.onrender.com/${id}`, originalUrl: url });
+  urlHistory.push({ id, userIdentifier, shortUrl: `http://${req.hostname}/${id}`, originalUrl: url });
   urlAnalytics[id] = { clicks: 0, sources: {} };
 
   // Save the updated history and analytics to the file
@@ -95,7 +96,7 @@ app.post('/api/shorten', async (req, res) => {
     }
   });
 
-  res.json({ shortUrl: `https://scissorfrontend.onrender.com/${id}`, qrCode: `https://scissorfrontend.onrender.com/qrcodes/${id}.png` });
+  res.json({ shortUrl: `http://${req.hostname}/${id}`, qrCode: `http://${req.hostname}/qrcodes/${id}.png` });
 });
 
 app.get('/', (req, res) => {
